@@ -3,6 +3,8 @@
 
 import random
 import string
+import math
+
 class Nodo:
     
     def __init__(self, idson, pos):
@@ -129,6 +131,9 @@ class Grafo:
                                 print("se enlazó"+ str(nodos[x].pos) +"#######"+ str(nodos[numerillo].pos) )
                                 nodos[numerillo].aristas_posibles +=1
                                 nodos[x].aristas_posibles += 1
+
+                if(len(self.aristas) < m-1):
+                    break
         grafillo = Grafo()
         return grafillo
         
@@ -162,8 +167,6 @@ class Grafo:
         grafito = Grafo()
         return grafito
 
-        pass
-
     def grafoGeografico(self,n, r, dirigido=False):
         """
         Genera grafo aleatorio con el modelo geográfico simple
@@ -172,8 +175,34 @@ class Grafo:
         :param dirigido: el grafo es dirigido?
         :return: grafo generado
         """
-        pass
+        #Esta función calcula la probabilidad mediante una función exponencial utilizando la distancia
+        #la agrego porque si sólo me baso en la distancia, no va a existir un valor probabilístico real
+        def pExp(euclidesDist, r, cst):
+            return math.exp(-euclidesDist/(r * cst))
+        t=0
+        for x in range(n):
 
+            idcito = self.generaId()
+            nodo = Nodo(idcito, str(t))
+            numerilloUno= random.random(); numerilloDos = random.random()
+            nodo.valorEquis = numerilloUno; nodo.valorYe = numerilloDos
+            nodos = self.agregar_nodo(nodo)
+            t+=1
+        y=0
+        for y in range(n):
+            
+            
+            nodoRandom = nodos[random.randint(0,n-1)]
+            index = nodos.index(nodoRandom)
+            if(nodoRandom.idson != nodos[y].idson):
+                euclidesDist = math.sqrt((nodoRandom.valorEquis - nodos[y].valorEquis)**2 + (nodoRandom.valorYe - nodos[y].valorYe)**2)
+                p = pExp(euclidesDist, r, 1)
+
+                if(euclidesDist < p and euclidesDist < r):
+                    self.agregarArista(nodos[y], nodos[index])
+                    arista = Arista(nodos[y], nodos[index])
+                    print("arista1: " + str(arista.origen.pos)+"////////"+"arista2: "+str(arista.destino.pos))
+        y+=1
     def grafoBarabasiAlbert(self,n, d, dirigido=False):
         """
         Genera grafo aleatorio con el modelo Barabasi-Albert
@@ -182,6 +211,7 @@ class Grafo:
         :param dirigido: el grafo es dirigido?
         :return: grafo generado
         """
+        
         pass
 
     def grafoDorogovtsevMendes(self,n, dirigido=False):
@@ -193,8 +223,9 @@ class Grafo:
         """
         pass
 
-Grafo().generaId()
 
 Grafo().grafoMalla(10,4, False)
 Grafo().grafoErdosRenyi(30,4, False)
 Grafo().grafoGilbert(20,0.2,False)
+Grafo().grafoGeografico(30,1, False)
+
