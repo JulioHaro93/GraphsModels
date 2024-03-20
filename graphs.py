@@ -177,8 +177,7 @@ class Grafo:
         """
         #Esta función calcula la probabilidad mediante una función exponencial utilizando la distancia
         #la agrego porque si sólo me baso en la distancia, no va a existir un valor probabilístico real
-        def pExp(euclidesDist, r, cst):
-            return math.exp(-euclidesDist/(r * cst))
+        
         t=0
         for x in range(n):
 
@@ -196,9 +195,8 @@ class Grafo:
             index = nodos.index(nodoRandom)
             if(nodoRandom.idson != nodos[y].idson):
                 euclidesDist = math.sqrt((nodoRandom.valorEquis - nodos[y].valorEquis)**2 + (nodoRandom.valorYe - nodos[y].valorYe)**2)
-                p = pExp(euclidesDist, r, 1)
 
-                if(euclidesDist < p and euclidesDist < r):
+                if(euclidesDist < r):
                     self.agregarArista(nodos[y], nodos[index])
                     arista = Arista(nodos[y], nodos[index])
                     print("arista1: " + str(arista.origen.pos)+"////////"+"arista2: "+str(arista.destino.pos))
@@ -211,8 +209,39 @@ class Grafo:
         :param dirigido: el grafo es dirigido?
         :return: grafo generado
         """
-        
-        pass
+        t=0; x=0
+        for x in range(d):
+            idcito = self.generaId()
+            nodo = Nodo(idcito, str(t))
+            nodos = self.agregar_nodo(nodo)
+            t+=1
+            if(x>0 and x< len(range(d))):
+                self.agregarArista(nodos[x], nodos[x-1])
+                nodos[x].aristas_posibles +=1
+                nodos[x-1].aristas_posibles +=1
+                print(str(nodos[x].pos)+"-conectado con-"+str(nodos[x-1].pos))
+                #print(str(nodos[0].pos))
+                if x == d-1:
+                    
+                    self.agregarArista(nodos[x], nodos[0])
+                    nodos[x].aristas_posibles +=1
+                    nodos[0].aristas_posibles +=1
+                    print(str(nodos[x].pos)+"-conectado con-"+str(nodos[0].pos))
+            x+=1
+        ##print(str(nodos[0].aristas_posibles)+"ARISTAS POSIBLES DE LA PRIMER POSICION")
+        y=0;s=0;l=d
+        for y in range(len(nodos), n):
+            idcito = self.generaId()
+            nodo = Nodo(idcito, str(l))
+            nodos = self.agregar_nodo(nodo)
+            l+=1
+            
+            numerillo =  random.randint(0, y-1)
+            if(nodos[y].idson != nodos[numerillo]):
+                self.agregarArista(nodos[y], nodos[numerillo])
+                print(str(nodos[y].pos)+"-conectado con-" + str(nodos[numerillo].pos))
+
+            y+=1
 
     def grafoDorogovtsevMendes(self,n, dirigido=False):
         """
@@ -228,4 +257,4 @@ Grafo().grafoMalla(10,4, False)
 Grafo().grafoErdosRenyi(30,4, False)
 Grafo().grafoGilbert(20,0.2,False)
 Grafo().grafoGeografico(30,1, False)
-
+Grafo().grafoBarabasiAlbert(30, 3, False)
