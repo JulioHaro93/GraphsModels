@@ -45,7 +45,7 @@ class Grafo:
     def generaId(self):
         idcitoBb= "".join(
             random.choice(string.ascii_letters + string.digits)
-            for _ in range(25)
+            for _ in range(10)
             )
         #print(idcitoBb)
         return idcitoBb
@@ -100,6 +100,8 @@ class Grafo:
                 j+=1
             i+=1
         grafito = Grafo()
+        grafito.nodos = self.nodos
+        grafito.aristas = self.aristas
         return grafito
     
         
@@ -135,6 +137,8 @@ class Grafo:
                 if(len(self.aristas) < m-1):
                     break
         grafillo = Grafo()
+        grafillo.nodos = self.nodos
+        grafillo.aristas = self.aristas
         return grafillo
         
     def grafoGilbert(self,n, p, dirigido=False):
@@ -165,6 +169,8 @@ class Grafo:
             j+=1
         i+=1
         grafito = Grafo()
+        grafito.nodos = self.nodos
+        grafito.aristas = self.aristas
         return grafito
 
     def grafoGeografico(self,n, r, dirigido=False):
@@ -201,6 +207,12 @@ class Grafo:
                     arista = Arista(nodos[y], nodos[index])
                     print("arista1: " + str(arista.origen.pos)+"////////"+"arista2: "+str(arista.destino.pos))
         y+=1
+        
+        grafito = Grafo()
+        grafito.nodos = self.nodos
+        grafito.aristas = self.aristas
+        return grafito
+    
     def grafoBarabasiAlbert(self,n, d, dirigido=False):
         """
         Genera grafo aleatorio con el modelo Barabasi-Albert
@@ -242,6 +254,10 @@ class Grafo:
                 print(str(nodos[y].pos)+"-conectado con-" + str(nodos[numerillo].pos))
 
             y+=1
+        grafito = Grafo()
+        grafito.nodos = self.nodos
+        grafito.aristas = self.aristas
+        return grafito
 
     def grafoDorogovtsevMendes(self,n, dirigido=False):
         """
@@ -250,11 +266,97 @@ class Grafo:
         :param dirigido: el grafo es dirigido?
         :return: grafo generado
         """
-        pass
+        d=3
+        t=0; x=0
+        for x in range(d):
+            idcito = self.generaId()
+            nodo = Nodo(idcito, str(t))
+            nodos = self.agregar_nodo(nodo)
+            t+=1
+            if(x>0 and x< len(range(d))):
+                self.agregarArista(nodos[x], nodos[x-1])
+                nodos[x].aristas_posibles +=1
+                nodos[x-1].aristas_posibles +=1
+                print(str(nodos[x].pos)+"-conectado Mendes con-"+str(nodos[x-1].pos))
+                #print(str(nodos[0].pos))
+                if x == d-1:
+                    
+                    self.agregarArista(nodos[x], nodos[0])
+                    nodos[x].aristas_posibles +=1
+                    nodos[0].aristas_posibles +=1
+                    print(str(nodos[x].pos)+"-conectado Mendes con-"+str(nodos[0].pos))
+            x+=1
+        ##print(str(nodos[0].aristas_posibles)+"ARISTAS POSIBLES DE LA PRIMER POSICION")
+        y=0;l=d
+        for y in range(len(nodos), n):
+            idcito = self.generaId()
+            nodo = Nodo(idcito, str(l))
+            nodos = self.agregar_nodo(nodo)
+            l+=1
+            
+            numerillo =  random.randint(0, y-1)
+            if(nodos[y].idson != nodos[numerillo]):
+                self.agregarArista(nodos[y], nodos[numerillo])
+                print(str(nodos[y].pos)+"-conectado Mendes con-" + str(nodos[numerillo].pos))
+
+            y+=1
+
+        grafito = Grafo()
+        grafito.nodos = self.nodos
+        grafito.aristas = self.aristas
+        return grafito
+    
+    def generaGephi(self, grafo, nombre_archivo):
+        dot = "graph G {\n"
+        
+        x=0
+        for arista in grafo.aristas:
+            dot += f'  {grafo.aristas[x].origen.pos} -- {grafo.aristas[x].destino.pos};\n'
+            x+=1
+        dot += "}"
+        
+        with open(nombre_archivo + '.gv', 'w') as archivo_dot:
+            archivo_dot.write(dot)
+
+malla30 = Grafo().grafoMalla(6,5, False)
+Grafo().generaGephi(malla30, "mallachico")
+malla100 = Grafo().grafoMalla(10,10, False)
+Grafo().generaGephi(malla100,"mallaMediano")
+malla500 = Grafo().grafoMalla(10,4, False)
+Grafo().generaGephi(malla500, "mallaGande")
+
+erdos30 = Grafo().grafoErdosRenyi(30,4, False)
+Grafo().generaGephi(erdos30, "erdoschico")
+erdos100 = Grafo().grafoErdosRenyi(100,4, False)
+Grafo().generaGephi(erdos100, "erdosmediano")
+erdos500 = Grafo().grafoErdosRenyi(500,4, False)
+Grafo().generaGephi(erdos500, "erdosgrande")
+
+gilbert30 = Grafo().grafoGilbert(30,0.2,False)
+Grafo().generaGephi(gilbert30, "gilbertchico")
+gilbert100 = Grafo().grafoGilbert(100,0.2,False)
+Grafo().generaGephi(gilbert100, "gilbertmediano")
+gilbert500 = Grafo().grafoGilbert(500,0.2,False)
+Grafo().generaGephi(gilbert500, "gilbertgrande")
 
 
-Grafo().grafoMalla(10,4, False)
-Grafo().grafoErdosRenyi(30,4, False)
-Grafo().grafoGilbert(20,0.2,False)
-Grafo().grafoGeografico(30,1, False)
-Grafo().grafoBarabasiAlbert(30, 3, False)
+geo30 = Grafo().grafoGeografico(30,1, False)
+Grafo().generaGephi(geo30, "geochico")
+geo100 = Grafo().grafoGeografico(100,1, False)
+Grafo().generaGephi(geo100, "geomediano")
+geo500 = Grafo().grafoGeografico(500,1, False)
+Grafo().generaGephi(geo500, "geogrande")
+
+barabasi30 = Grafo().grafoBarabasiAlbert(30, 5, False)
+Grafo().generaGephi(barabasi30, "barabasichico")
+barabasi100 = Grafo().grafoBarabasiAlbert(100, 5, False)
+Grafo().generaGephi(barabasi100, "barabasimediano")
+barabasi500 = Grafo().grafoBarabasiAlbert(500, 5, False)
+Grafo().generaGephi(barabasi500, "barabasigrande")
+
+mendes30 = Grafo().grafoDorogovtsevMendes(30, False)
+Grafo().generaGephi(mendes30, "mendeschico")
+mendes100 = Grafo().grafoDorogovtsevMendes(100, False)
+Grafo().generaGephi(mendes100, "mendesmediano")
+mendes500 = Grafo().grafoDorogovtsevMendes(500, False)
+Grafo().generaGephi(mendes500, "mendesgrande")
