@@ -318,11 +318,11 @@ class Grafo:
         with open(nombre_archivo + '.gv', 'w') as archivo_dot:
             archivo_dot.write(dot)
 
-malla30 = Grafo().grafoMalla(6,5, False)
+malla30 = Grafo().grafoMalla(30,3, False)
 Grafo().generaGephi(malla30, "mallachico")
-malla100 = Grafo().grafoMalla(10,10, False)
+malla100 = Grafo().grafoMalla(100,3, False)
 Grafo().generaGephi(malla100,"mallaMediano")
-malla500 = Grafo().grafoMalla(10,4, False)
+malla500 = Grafo().grafoMalla(500,3, False)
 Grafo().generaGephi(malla500, "mallaGande")
 
 erdos30 = Grafo().grafoErdosRenyi(30,4, False)
@@ -360,3 +360,7 @@ mendes100 = Grafo().grafoDorogovtsevMendes(100, False)
 Grafo().generaGephi(mendes100, "mendesmediano")
 mendes500 = Grafo().grafoDorogovtsevMendes(500, False)
 Grafo().generaGephi(mendes500, "mendesgrande")
+
+repo = 'https://github.com/JulioHaro93/GraphsModels'
+
+print("repositorio", repo)
