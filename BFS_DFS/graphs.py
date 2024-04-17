@@ -4,6 +4,7 @@
 import random
 import string
 import math
+import numpy as np
 
 class Queue:
     tam = None
@@ -91,6 +92,11 @@ class Grafo:
             )
         #print(idcitoBb)
         return idcitoBb
+    def limpiaGrafo(self, grafo):
+        for arista in grafo.aristas:
+            arista.origen.visited = False
+            arista.destino.visited = False
+        return grafo
     def toString(self, grafo):
         return f"Grafo(nodos={grafo.nodos}, aristas={grafo.aristas})"
     
@@ -362,27 +368,47 @@ class Grafo:
         
         with open(nombre_archivo + '.gv', 'w') as archivo_dot:
             archivo_dot.write(dot)
-    def bfs_malla(self, grafo, inicio):
+    def bfs(self, grafo, inicio):
+        grafitoBFS = Grafo()
+        for arista in grafo.aristas:
+            arista.destino.visited = False; arista.origen.visited = False
         q = Queue(len(grafo.aristas))
         nodito = grafo.aristas[inicio].origen
         nodo = Nodo(0,0)
-        print("########")
-
         nodito.visited = True
-        print(nodo.toString(nodito))
-        print("#######")
-        print(Nodo(0,0).toString(nodito))
         q.push(nodito)
         while len(q.datos) != 0:
             nodoActual = q.pop()
-            print((nodoActual))
-            #print(nodoActual.toString(grafo.aristas.index(nodoActual).destino))
-            for arista in grafo.aristas.index(nodoActual).destino:
-                u = arista.destino.visited = True
-                q.add(u)
-                
-    def dfs_r():
-        pass
+            destino = nodoActual
+            lista = grafo.aristas
+            i =0
+            if(i < q.tam):
+                for arista in grafo.aristas:
+                    if(arista.destino.visited == False):
+                        u = arista.destino
+                        u.visited = True
+                        q.push(u)
+                        arista = Arista(arista.origen, arista.destino)
+                        grafitoBFS.agregarArista(arista.origen, arista.destino)
+            else:
+                grafo.aristas[i].destino.visited = True
+                print("Se ha completado el BFS")
+        return grafitoBFS
+
+    def dfs_r(self, grafo, u, v, grafito):
+        aristas = grafo.aristas
+        
+        if(v < len(aristas)):
+            aristas[u].origen.visited = True
+            
+            for arista in aristas:
+                if arista.origen == aristas[u].origen and not arista.destino.visited:
+                    grafito.agregarArista(arista.origen, arista.destino)
+                    u = v
+                    self.dfs_r(grafo, u, v+1, grafito)
+        return grafito
+
+
 
     def dfs_i_malla(self, grafo, inicio):
         stack = [grafo.nodos[inicio]]
@@ -440,12 +466,17 @@ class Grafo:
         except:
             print("Se ha leído todo el grafo")
         return grafillo
-            
+
+  
 malla30 = Grafo().grafoMalla(30,1, False)
+qMalla30 = Queue(len(malla30.aristas))
 dsf_i_chico= Grafo().dfs_i_malla(malla30, 0)
-bfs_malla30 = Grafo().bfs_malla(malla30, 0)
-print(dsf_i_chico)
+bfs_malla30 = Grafo().bfs(malla30, 0)
+grafito = Grafo()
+dfsRMalla30 = Grafo().dfs_r(grafito.limpiaGrafo(malla30),0,1, grafito)
 Grafo().generaGephi(dsf_i_chico, "mallachicoDSF")
+Grafo().generaGephi(bfs_malla30,"mallachicoBFS")
+Grafo().generaGephi(dfsRMalla30, "RecMalla30")
 malla100 = Grafo().grafoMalla(100,1, False)
 dfs_i_malla_mediano = Grafo().dfs_i_malla(malla100,0)
 Grafo().generaGephi(dfs_i_malla_mediano,"mallaMedianoDFS")
@@ -504,6 +535,6 @@ mendes500 = Grafo().grafoDorogovtsevMendes(500, False)
 dfs_i_mendes500 = Grafo().dfs_i(mendes500,0)
 Grafo().generaGephi(dfs_i_mendes500, "mendesgrandeDFS")
 
-repo = 'https://github.com/JulioHaro93/GraphsModels'
+repo = 'https://github.com/JulioHaro93/GraphsModels/BFS_DFS'
 
 print("repositorio", repo)
