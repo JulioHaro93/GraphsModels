@@ -90,7 +90,6 @@ class Grafo:
             random.choice(string.ascii_letters + string.digits)
             for _ in range(10)
             )
-        #print(idcitoBb)
         return idcitoBb
     def limpiaGrafo(self, grafo):
         for arista in grafo.aristas:
@@ -136,7 +135,6 @@ class Grafo:
                     arista = Arista(nodos[i][j],nodos[i][j+1])
                     nodos[i][j].aristas_salientes.append(nodos[i][j+1])
                     self.aristas.append(arista)
-                    #print(arista)
                     
                 if i<m-1:
                     if (nodos[i][j].idson == nodos[i+1][j].idson):
@@ -180,7 +178,6 @@ class Grafo:
                             if(nodos[numerillo].aristas_posibles < 4 and nodos[x].aristas_posibles < 4):
                                 arista = Arista(nodos[x], nodos[numerillo])
                                 self.agregarArista(nodos[x], nodos[numerillo])
-                                #print("se enlazó"+ str(nodos[x].pos) +"#######"+ str(nodos[numerillo].pos) )
                                 nodos[numerillo].aristas_posibles +=1
                                 nodos[x].aristas_posibles += 1
 
@@ -206,7 +203,6 @@ class Grafo:
             nodo = Nodo(idcito, str(t))
             nodos = self.agregar_nodo(nodo)
             t+=1
-            #print(nodo)
         i=0;j=0
         nodos2 = nodos
         for i in range(len(nodos)):
@@ -215,7 +211,6 @@ class Grafo:
                     if(p > random.random()):
                         arista = Arista(nodos[i], nodos2[j])
                         self.agregarArista(nodos[i], nodos2[j])
-                        #print("se enlazó "+str(arista.origen.pos)+"-------"+ str(arista.destino.pos))
             j+=1
         i+=1
         grafito = Grafo()
@@ -255,7 +250,6 @@ class Grafo:
                 if(euclidesDist < r):
                     self.agregarArista(nodos[y], nodos[index])
                     arista = Arista(nodos[y], nodos[index])
-                    #print("arista1: " + str(arista.origen.pos)+"////////"+"arista2: "+str(arista.destino.pos))
         y+=1
         
         grafito = Grafo()
@@ -281,16 +275,12 @@ class Grafo:
                 self.agregarArista(nodos[x], nodos[x-1])
                 nodos[x].aristas_posibles +=1
                 nodos[x-1].aristas_posibles +=1
-                #print(str(nodos[x].pos)+"-conectado con-"+str(nodos[x-1].pos))
-                #print(str(nodos[0].pos))
                 if x == d-1:
                     
                     self.agregarArista(nodos[x], nodos[0])
                     nodos[x].aristas_posibles +=1
                     nodos[0].aristas_posibles +=1
-                    #print(str(nodos[x].pos)+"-conectado con-"+str(nodos[0].pos))
             x+=1
-        ##print(str(nodos[0].aristas_posibles)+"ARISTAS POSIBLES DE LA PRIMER POSICION")
         y=0;s=0;l=d
         for y in range(len(nodos), n):
             idcito = self.generaId()
@@ -301,7 +291,6 @@ class Grafo:
             numerillo =  random.randint(0, y-1)
             if(nodos[y].idson != nodos[numerillo]):
                 self.agregarArista(nodos[y], nodos[numerillo])
-                #print(str(nodos[y].pos)+"-conectado con-" + str(nodos[numerillo].pos))
 
             y+=1
         grafito = Grafo()
@@ -327,17 +316,13 @@ class Grafo:
                 self.agregarArista(nodos[x], nodos[x-1])
                 nodos[x].aristas_posibles +=1
                 nodos[x-1].aristas_posibles +=1
-                #print(str(nodos[x].pos)+"-conectado Mendes con-"+str(nodos[x-1].pos))
-                #print(str(nodos[0].pos))
                 if x == d-1:
                     
                     self.agregarArista(nodos[x], nodos[0])
                     
                     nodos[x].aristas_posibles +=1
                     nodos[0].aristas_posibles +=1
-                    #print(str(nodos[x].pos)+"-conectado Mendes con-"+str(nodos[0].pos))
             x+=1
-        ##print(str(nodos[0].aristas_posibles)+"ARISTAS POSIBLES DE LA PRIMER POSICION")
         y=0;l=d
         for y in range(len(nodos), n):
             idcito = self.generaId()
@@ -348,7 +333,6 @@ class Grafo:
             numerillo =  random.randint(0, y-1)
             if(nodos[y].idson != nodos[numerillo]):
                 self.agregarArista(nodos[y], nodos[numerillo])
-                #print(str(nodos[y].pos)+"-conectado Mendes con-" + str(nodos[numerillo].pos))
 
             y+=1
 
@@ -407,31 +391,25 @@ class Grafo:
                     u = v
                     self.dfs_r(grafo, u, v+1, grafito)
         return grafito
-
-
-
+    
     def dfs_i_malla(self, grafo, inicio):
-        stack = [grafo.nodos[inicio]]
+        stack = [grafo.aristas[inicio]]
         grafillo = Grafo()
-        stack = [grafo.nodos[inicio]]
+        stack = [grafo.aristas[inicio]]
         grafillo = Grafo()
         nodito = Nodo(0,0)
-
-        grafo.nodos[inicio][0].visited = True
-
+        grafo.aristas[inicio].origen.visited = True
         try:
-        
             while stack:
-
                 nodo_actual = stack.pop()
                 if(nodo_actual is not None and nodo_actual != grafo.nodos[len(grafo.nodos)-1][0]):
-                    nodo_actual= nodo_actual[0]
+                    nodo_actual= nodo_actual
                 for arista in grafo.aristas:
                     nodo_actual.toString(nodo_actual)
                     if not arista.destino.visited:
                         arista.destino.visited = True
                         stack.append(arista.destino)
-                        grafillo.agregarArista(nodo_actual, arista.destino)
+                        grafillo.agregarArista(nodo_actual.origen, arista.destino)
 
             for nodo in grafo.nodos:
                 nodo.visited = False
@@ -439,32 +417,22 @@ class Grafo:
             print("Se ha leído todo el grafo")
         return grafillo
     def dfs_i(self, grafo, inicio):
-        stack = [grafo.nodos[inicio]]
-        grafillo = Grafo()
-        stack = [grafo.nodos[inicio]]
+        
         grafillo = Grafo()
         nodito = Nodo(0,0)
-
-        grafo.nodos[inicio].visited = True
-
-        try:
-        
-            while stack:
-
-                nodo_actual = stack.pop()
-                if(nodo_actual is not None and nodo_actual != grafo.nodos[len(grafo.nodos)-1]):
-                    nodo_actual= nodo_actual
+        grafo.aristas[inicio].origen.visited = True
+        nodo = grafo.aristas[inicio].origen
+        stack = [nodo]
+        while stack:
+            nodo_actual = stack.pop()
+            if(nodo_actual.visited == True):
                 for arista in grafo.aristas:
                     nodo_actual.toString(nodo_actual)
                     if not arista.destino.visited:
                         arista.destino.visited = True
                         stack.append(arista.destino)
                         grafillo.agregarArista(nodo_actual, arista.destino)
-
-            for nodo in grafo.nodos:
-                nodo.visited = False
-        except:
-            print("Se ha leído todo el grafo")
+            print("intentito")
         return grafillo
 
   
@@ -476,23 +444,50 @@ grafito = Grafo()
 dfsRMalla30 = Grafo().dfs_r(grafito.limpiaGrafo(malla30),0,1, grafito)
 Grafo().generaGephi(dsf_i_chico, "mallachicoDSF")
 Grafo().generaGephi(bfs_malla30,"mallachicoBFS")
-Grafo().generaGephi(dfsRMalla30, "RecMalla30")
+Grafo().generaGephi(dfsRMalla30, "mallaRec30")
 malla100 = Grafo().grafoMalla(100,1, False)
 dfs_i_malla_mediano = Grafo().dfs_i_malla(malla100,0)
-Grafo().generaGephi(dfs_i_malla_mediano,"mallaMedianoDFS")
+bfs_malla100 = Grafo().bfs(malla100, 0)
+grafito = Grafo()
+dfsRMalla100 = Grafo().dfs_r(grafito.limpiaGrafo(malla100),0,1, grafito)
+Grafo().generaGephi(dfs_i_malla_mediano, "mallamedianoDSF")
+Grafo().generaGephi(bfs_malla100,"mallamedianoBFS")
+Grafo().generaGephi(dfsRMalla100, "MallaRec100")
 malla500 = Grafo().grafoMalla(500,1, False)
 dfs_i_malla_grande = Grafo().dfs_i_malla(malla500, 0)
+bfs_malla500 = Grafo().bfs(malla500, 0)
+grafito = Grafo()
+dfsRMalla500 = Grafo().dfs_r(grafito.limpiaGrafo(malla500),0,1, grafito)
+Grafo().generaGephi(bfs_malla500,"mallaGrandeBFS")
+Grafo().generaGephi(dfsRMalla500, "mallaRec500")
 Grafo().generaGephi(dfs_i_malla_grande, "mallaGandeDFS")
 
 erdos30 = Grafo().grafoErdosRenyi(30,4, False)
-dfs_i_erdos30 = Grafo().dfs_i(erdos30, 0)
-Grafo().generaGephi(dfs_i_erdos30, "erdoschicoDFS")
+dfs_i_erdos30 = Grafo().dfs_i_malla(erdos30, 0)
+bfs_erdos30 = Grafo().bfs(erdos30, 0)
+grafito = Grafo()
+dfsRerdos30 = Grafo().dfs_r(grafito.limpiaGrafo(erdos30),0,1, grafito)
+Grafo().generaGephi(dfs_i_erdos30, "erdos30DFS")
+Grafo().generaGephi(dfsRerdos30,"erdosRec30")
+Grafo().generaGephi(bfs_erdos30, "erdosBFS30")
+
 erdos100 = Grafo().grafoErdosRenyi(100,4, False)
 dfs_i_erdos100 = Grafo().dfs_i(erdos100,0)
-Grafo().generaGephi(dfs_i_erdos100, "erdosmedianoDFS")
+bfs_erdos100 = Grafo().bfs(erdos100, 0)
+grafito = Grafo()
+dfsRerdos100 = Grafo().dfs_r(grafito.limpiaGrafo(erdos100),0,1, grafito)
+Grafo().generaGephi(dfs_i_erdos100, "erdos100DFS")
+Grafo().generaGephi(dfsRerdos100,"erdosRec100")
+Grafo().generaGephi(bfs_erdos100, "erdosBFS100")
+
 erdos500 = Grafo().grafoErdosRenyi(500,4, False)
 dfs_i_erdos500 = Grafo().dfs_i(erdos500,0)
-Grafo().generaGephi(dfs_i_erdos500, "erdosgrandeDFS")
+bfs_erdos500 = Grafo().bfs(erdos500, 0)
+grafito = Grafo()
+dfsRerdos500 = Grafo().dfs_r(grafito.limpiaGrafo(erdos500),0,1, grafito)
+Grafo().generaGephi(dfs_i_erdos500, "erdos100DFS")
+Grafo().generaGephi(dfsRerdos500,"erdosRec100")
+Grafo().generaGephi(bfs_erdos500, "erdosBFS100")
 
 gilbert30 = Grafo().grafoGilbert(30,0.2,False)
 dfs_i_gilbert30 = Grafo().dfs_i(gilbert30,0)
@@ -507,33 +502,93 @@ Grafo().generaGephi(dfs_i_gilbert500, "gilbertgrandeDFS")
 
 geo30 = Grafo().grafoGeografico(30,1, False)
 dfs_i_geo30 = Grafo().dfs_i(geo30,0)
-Grafo().generaGephi(dfs_i_geo30, "geochicoDFS")
+bfs_geo30 = Grafo().bfs(geo30, 0)
+grafito = Grafo()
+dfsRgeo30 = Grafo().dfs_r(grafito.limpiaGrafo(geo30),0,1, grafito)
+Grafo().generaGephi(dfs_i_geo30, "geo30DFS")
+Grafo().generaGephi(dfsRgeo30,"geoRec30")
+Grafo().generaGephi(bfs_geo30, "geoBFS30")
+
 geo100 = Grafo().grafoGeografico(100,1, False)
 dfs_i_geo100 = Grafo().dfs_i(geo100,0)
-Grafo().generaGephi(dfs_i_geo100, "geomedianoDFS")
+bfs_geo30 = Grafo().bfs(geo30, 0)
+grafito = Grafo()
+dfsRgeo30 = Grafo().dfs_r(grafito.limpiaGrafo(geo30),0,1, grafito)
+Grafo().generaGephi(dfs_i_geo30, "geo30DFS")
+Grafo().generaGephi(dfsRgeo30,"geoRec30")
+Grafo().generaGephi(bfs_geo30, "geoBFS30")
+
+bfs_geo100 = Grafo().bfs(geo100, 0)
+grafito = Grafo()
+dfsRgeo100 = Grafo().dfs_r(grafito.limpiaGrafo(geo100),0,1, grafito)
+Grafo().generaGephi(dfs_i_geo100, "geo100DFS")
+Grafo().generaGephi(dfsRgeo30,"geoRec100")
+Grafo().generaGephi(bfs_geo30, "geoBFS100")
+
+
 geo500 = Grafo().grafoGeografico(500,1, False)
 dfs_i_geo500 = Grafo().dfs_i(geo500,0)
-Grafo().generaGephi(dfs_i_geo500, "geograndeDFS")
+bfs_geo500 = Grafo().bfs(geo500, 0)
+grafito = Grafo()
+dfsRgeo500 = Grafo().dfs_r(grafito.limpiaGrafo(geo500),0,1, grafito)
+Grafo().generaGephi(dfs_i_geo500, "geo500DFS")
+Grafo().generaGephi(dfsRgeo500,"geoRec500")
+Grafo().generaGephi(bfs_geo500, "geoBFS500")
 
 barabasi30 = Grafo().grafoBarabasiAlbert(30, 5, False)
 dfs_i_barabasi30 = Grafo().dfs_i(barabasi30,0)
-Grafo().generaGephi(dfs_i_barabasi30, "barabasichicoDFS")
+bfs_barabasi30 = Grafo().bfs(barabasi30, 0)
+grafito = Grafo()
+dfsRbarabasi30 = Grafo().dfs_r(grafito.limpiaGrafo(barabasi30),0,1, grafito)
+Grafo().generaGephi(dfs_i_barabasi30, "barabasi30DFS")
+Grafo().generaGephi(dfsRbarabasi30,"barabasiRec30")
+Grafo().generaGephi(bfs_barabasi30, "barabasiBFS30")
+
 barabasi100 = Grafo().grafoBarabasiAlbert(100, 5, False)
 dfs_i_barabasi100 = Grafo().dfs_i(barabasi100,0)
-Grafo().generaGephi(dfs_i_barabasi100, "barabasimedianoDFS")
+bfs_barabasi100 = Grafo().bfs(barabasi100, 0)
+grafito = Grafo()
+dfsRbarabasi100 = Grafo().dfs_r(grafito.limpiaGrafo(barabasi100),0,1, grafito)
+Grafo().generaGephi(dfs_i_barabasi100, "barabasi100DFS")
+Grafo().generaGephi(dfsRbarabasi100,"barabasiRec100")
+Grafo().generaGephi(bfs_barabasi100, "barabasiBFS100")
+
 barabasi500 = Grafo().grafoBarabasiAlbert(500, 5, False)
 dfs_i_barabasi500 = Grafo().dfs_i(barabasi500,0)
-Grafo().generaGephi(dfs_i_barabasi500, "barabasigrandeDFS")
+bfs_barabasi500 = Grafo().bfs(barabasi500, 0)
+grafito = Grafo()
+dfsRbarabasi500 = Grafo().dfs_r(grafito.limpiaGrafo(barabasi500),0,1, grafito)
+Grafo().generaGephi(dfs_i_barabasi500, "barabasi500DFS")
+Grafo().generaGephi(dfsRbarabasi500,"barabasiRec500")
+Grafo().generaGephi(bfs_barabasi500, "barabasiBFS500")
 
 mendes30 = Grafo().grafoDorogovtsevMendes(30, False)
 dfs_i_mendes30 = Grafo().dfs_i(mendes30,0)
-Grafo().generaGephi(dfs_i_mendes30, "mendeschicoDFS")
+bfs_mendes30 = Grafo().bfs(mendes30, 0)
+grafito = Grafo()
+dfsRmendes30 = Grafo().dfs_r(grafito.limpiaGrafo(mendes30),0,1, grafito)
+Grafo().generaGephi(dfs_i_mendes30, "mendes30DFS")
+Grafo().generaGephi(dfsRmendes30,"mendesRec30")
+Grafo().generaGephi(bfs_mendes30, "mendesBFS30")
+
 mendes100 = Grafo().grafoDorogovtsevMendes(100, False)
 dfs_i_mendes100 = Grafo().dfs_i(mendes100,0)
-Grafo().generaGephi(dfs_i_mendes100, "mendesmedianoDFS")
+bfs_mendes100 = Grafo().bfs(mendes100, 0)
+grafito = Grafo()
+dfsRmendes100 = Grafo().dfs_r(grafito.limpiaGrafo(mendes100),0,1, grafito)
+Grafo().generaGephi(dfs_i_mendes100, "mendes100DFS")
+Grafo().generaGephi(dfsRmendes100,"mendesRec100")
+Grafo().generaGephi(bfs_mendes100, "mendesBFS100")
+
 mendes500 = Grafo().grafoDorogovtsevMendes(500, False)
 dfs_i_mendes500 = Grafo().dfs_i(mendes500,0)
-Grafo().generaGephi(dfs_i_mendes500, "mendesgrandeDFS")
+bfs_mendes500 = Grafo().bfs(mendes500, 0)
+grafito = Grafo()
+dfsRmendes500 = Grafo().dfs_r(grafito.limpiaGrafo(mendes500),0,1, grafito)
+Grafo().generaGephi(dfs_i_mendes500, "mendes500DFS")
+Grafo().generaGephi(dfsRmendes500,"mendesRec500")
+Grafo().generaGephi(bfs_mendes500, "mendesBFS500")
+
 
 repo = 'https://github.com/JulioHaro93/GraphsModels/BFS_DFS'
 
